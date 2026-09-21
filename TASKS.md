@@ -5,39 +5,39 @@ relevant phase rather than creating a separate list.
 
 ## Phase 1 — Core Engine
 
-- [ ] Scaffold React + Vite project, PWA manifest boilerplate
-- [ ] Build one device frame asset (any single cutout style) with matching SVG mask
-- [ ] Implement `compositeFrame(source, frame, background) -> canvas`
-- [ ] Render a static image inside the frame, export as PNG
-- [ ] Implement `encodeSequence(frames[], format, fps, duration) -> file`
-- [ ] Wire `ffmpeg.wasm`, encode a trivial multi-frame sequence to MP4
-- [ ] Extend `compositeFrame` to accept a video source, live preview in-frame
-- [ ] Export a short video-in-frame clip end-to-end
-- [ ] Implement client-side dominant-color sampling from a source image
-- [ ] Generate a gradient background from sampled colors, set as default
-- [ ] Confirm client-side export performance on a representative low-end device;
+- [x] Scaffold React + Vite project, PWA manifest boilerplate
+- [x] Build one device frame asset (any single cutout style) with matching SVG mask
+- [x] Implement `compositeFrame(source, frame, background) -> canvas`
+- [x] Render a static image inside the frame, export as PNG
+- [x] Implement `encodeSequence(frames[], format, fps, duration) -> file`
+- [x] Wire `ffmpeg.wasm`, encode a trivial multi-frame sequence to MP4
+- [x] Extend `compositeFrame` to accept a video source, live preview in-frame
+- [x] Export a short video-in-frame clip end-to-end
+- [x] Implement client-side dominant-color sampling from a source image
+- [x] Generate a gradient background from sampled colors, set as default
+- [x] Confirm client-side export performance on a representative low-end device;
       record findings against the client/server render threshold decision in
       `SPEC.md` §3
 
 ## Phase 2 — Editor UX
 
-- [ ] Build bottom toolbar: select/hand, crop, shapes dropdown, text, grid, zoom
+- [x] Build bottom toolbar: select/hand, crop, shapes dropdown, text, grid, zoom
       in/out, reset
-- [ ] Build side toolbar: container style picker, pre-defined backgrounds, custom
+- [x] Build side toolbar: container style picker, pre-defined backgrounds, custom
       background (solid/gradient/upload)
-- [ ] Build top nav: logo, upload file, slideshow dropdown (empty state ok for now)
-- [ ] Implement pen/freehand annotation tool
-- [ ] Implement arrow tool
-- [ ] Implement text tool
-- [ ] Implement shape tool (rectangle minimum, dropdown for more shapes)
-- [ ] Implement blur/pixelate (redaction) tool
-- [ ] Implement crop tool (manual)
-- [ ] Implement shared undo/redo stack across annotation + crop/transform
-- [ ] Implement smart crop: auto aspect-detect + auto-position on upload
-- [ ] Implement smart-crop toggle; verify manual crop persists across frame switches
+- [x] Build top nav: logo, upload file, slideshow dropdown (empty state ok for now)
+- [x] Implement pen/freehand annotation tool
+- [x] Implement arrow tool
+- [x] Implement text tool
+- [x] Implement shape tool (rectangle minimum, dropdown for more shapes)
+- [x] Implement blur/pixelate (redaction) tool
+- [x] Implement crop tool (manual)
+- [x] Implement shared undo/redo stack across annotation + crop/transform
+- [x] Implement smart crop: auto aspect-detect + auto-position on upload
+- [x] Implement smart-crop toggle; verify manual crop persists across frame switches
       once disabled
-- [ ] Implement keyboard shortcuts per `PRD.md` §5.2 table
-- [ ] Build `?` shortcut cheat-sheet overlay
+- [x] Implement keyboard shortcuts per `PRD.md` §5.2 table
+- [x] Build `?` shortcut cheat-sheet overlay
 
 ## Phase 3 — Sharing & Growth Features
 
