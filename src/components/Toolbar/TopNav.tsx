@@ -101,33 +101,8 @@ export const TopNav: React.FC<TopNavProps> = ({
         </div>
       </div>
 
-      {/* RIGHT SECTION: Collaborators, Help, Avatar, Share Button, Zoom, Minimap */}
+      {/* RIGHT SECTION: Help, Avatar, Zoom, Minimap */}
       <div className="nav-right-section">
-        {/* Collaborators Stack */}
-        <div className="collaborator-group">
-          <span className="shared-with-label">Shared With</span>
-          <div className="avatar-stack">
-            {/* Avatar 1 */}
-            <img
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=faces"
-              alt="Collab 1"
-              className="avatar-stack-item"
-            />
-            {/* Avatar 2 */}
-            <img
-              src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=64&h=64&fit=crop&crop=faces"
-              alt="Collab 2"
-              className="avatar-stack-item"
-            />
-            {/* Avatar 3 */}
-            <img
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=faces"
-              alt="Collab 3"
-              className="avatar-stack-item"
-            />
-          </div>
-        </div>
-
         {/* Help & Pointer Status Icons */}
         <button
           className="icon-btn"
@@ -163,11 +138,6 @@ export const TopNav: React.FC<TopNavProps> = ({
           accept="image/*,video/*"
           style={{ display: 'none' }}
         />
-
-        {/* Vibrant Purple Share / Export Button */}
-        <button className="btn-share" onClick={onOpenExportModal}>
-          <span>Share</span>
-        </button>
 
         {/* Zoom Capsule: [ -  40% ⌄  + ] */}
         <div className="zoom-capsule">
