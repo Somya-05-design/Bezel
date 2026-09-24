@@ -1,27 +1,29 @@
 import React from 'react';
 import {
-  ArrowUpRight,
-  Circle,
-  Crop,
-  EyeOff,
-  Minus,
-  MousePointer,
-  Move,
-  PenTool,
+  ArrowUp,
+  FileText,
+  Grid,
+  Hand,
+  Image as ImageIcon,
+  Layers,
+  Link2,
+  MessageCircle,
+  MessageSquare,
+  MousePointer2,
   Plus,
   Redo2,
   RotateCcw,
-  Square,
+  Sparkles,
+  StickyNote,
   Type,
   Undo2,
-  ZoomIn,
-  ZoomOut,
+  Hexagon,
 } from 'lucide-react';
 import { AnnotationTool } from '../../core/types';
 
 interface BottomToolbarProps {
-  activeTool: AnnotationTool;
-  onSelectTool: (tool: AnnotationTool) => void;
+  activeTool: AnnotationTool | 'note' | 'hand' | 'shape' | 'image' | 'link' | 'comment';
+  onSelectTool: (tool: any) => void;
   annotationColor: string;
   onChangeColor: (color: string) => void;
   canUndo: boolean;
@@ -34,163 +36,184 @@ interface BottomToolbarProps {
   onResetZoom: () => void;
 }
 
-const PRESET_COLORS = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ffffff', '#000000'];
-
 export const BottomToolbar: React.FC<BottomToolbarProps> = ({
   activeTool,
   onSelectTool,
-  annotationColor,
-  onChangeColor,
   canUndo,
   canRedo,
   onUndo,
   onRedo,
-  zoom,
-  onZoomIn,
-  onZoomOut,
-  onResetZoom,
 }) => {
+  // Map tool to human friendly name for tooltip
+  const getToolName = (tool: string) => {
+    switch (tool) {
+      case 'note':
+      case 'rectangle':
+        return 'Sticky Note';
+      case 'select':
+        return 'Selection Pointer';
+      case 'hand':
+        return 'Hand (Pan Canvas)';
+      case 'shape':
+      case 'circle':
+        return 'Shape Tool';
+      case 'arrow':
+        return 'Arrow Tool';
+      case 'text':
+        return 'Text Tool';
+      case 'image':
+        return 'Insert Media';
+      case 'link':
+        return 'Insert Link';
+      case 'comment':
+        return 'Add Comment';
+      case 'pen':
+        return 'Freehand Draw';
+      default:
+        return 'Sticky Note';
+    }
+  };
+
   return (
-    <div className="bottom-toolbar">
-      {/* Select / Pointer */}
-      <button
-        className={`icon-btn ${activeTool === 'select' ? 'active' : ''}`}
-        onClick={() => onSelectTool('select')}
-        title="Select / Move (V)"
-      >
-        <MousePointer size={18} />
-      </button>
-
-      {/* Crop */}
-      <button
-        className={`icon-btn ${activeTool === 'crop' ? 'active' : ''}`}
-        onClick={() => onSelectTool('crop')}
-        title="Crop (C)"
-      >
-        <Crop size={18} />
-      </button>
-
-      <div className="toolbar-divider" />
-
-      {/* Pen */}
-      <button
-        className={`icon-btn ${activeTool === 'pen' ? 'active' : ''}`}
-        onClick={() => onSelectTool('pen')}
-        title="Pen / Freehand (P)"
-      >
-        <PenTool size={18} />
-      </button>
-
-      {/* Arrow */}
-      <button
-        className={`icon-btn ${activeTool === 'arrow' ? 'active' : ''}`}
-        onClick={() => onSelectTool('arrow')}
-        title="Arrow Tool (A)"
-      >
-        <ArrowUpRight size={18} />
-      </button>
-
-      {/* Text */}
-      <button
-        className={`icon-btn ${activeTool === 'text' ? 'active' : ''}`}
-        onClick={() => onSelectTool('text')}
-        title="Text Tool (T)"
-      >
-        <Type size={18} />
-      </button>
-
-      {/* Rectangle */}
-      <button
-        className={`icon-btn ${activeTool === 'rectangle' ? 'active' : ''}`}
-        onClick={() => onSelectTool('rectangle')}
-        title="Rectangle Shape (R)"
-      >
-        <Square size={18} />
-      </button>
-
-      {/* Circle */}
-      <button
-        className={`icon-btn ${activeTool === 'circle' ? 'active' : ''}`}
-        onClick={() => onSelectTool('circle')}
-        title="Circle Shape (O)"
-      >
-        <Circle size={18} />
-      </button>
-
-      {/* Blur / Redact */}
-      <button
-        className={`icon-btn ${activeTool === 'redact' ? 'active' : ''}`}
-        onClick={() => onSelectTool('redact')}
-        title="Blur Redaction (B)"
-      >
-        <EyeOff size={18} />
-      </button>
-
-      <div className="toolbar-divider" />
-
-      {/* Quick Color Picker */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-        {PRESET_COLORS.map((c) => (
-          <button
-            key={c}
-            onClick={() => onChangeColor(c)}
-            style={{
-              width: 18,
-              height: 18,
-              borderRadius: '50%',
-              backgroundColor: c,
-              border: annotationColor === c ? '2px solid #818cf8' : '1px solid rgba(255,255,255,0.2)',
-              transform: annotationColor === c ? 'scale(1.2)' : 'none',
-              cursor: 'pointer',
-              transition: 'all 0.15s ease',
-            }}
-          />
-        ))}
-      </div>
-
-      <div className="toolbar-divider" />
-
-      {/* Undo */}
-      <button
-        className="icon-btn"
-        disabled={!canUndo}
-        onClick={onUndo}
-        title="Undo (Ctrl+Z)"
-        style={{ opacity: canUndo ? 1 : 0.4 }}
-      >
-        <Undo2 size={18} />
-      </button>
-
-      {/* Redo */}
-      <button
-        className="icon-btn"
-        disabled={!canRedo}
-        onClick={onRedo}
-        title="Redo (Ctrl+Shift+Z)"
-        style={{ opacity: canRedo ? 1 : 0.4 }}
-      >
-        <Redo2 size={18} />
-      </button>
-
-      <div className="toolbar-divider" />
-
-      {/* Zoom Controls */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-        <button className="icon-btn" onClick={onZoomOut} title="Zoom Out (-)" style={{ width: 32, height: 32 }}>
-          <Minus size={14} />
-        </button>
+    <>
+      {/* Bottom Left Quick Controls: [ ↺  ▨  ⊞ ] */}
+      <div className="bottom-left-controls">
         <button
           className="icon-btn"
-          onClick={onResetZoom}
-          title="Reset Zoom (0)"
-          style={{ width: 'auto', padding: '0 8px', height: 32, fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}
+          disabled={!canUndo}
+          onClick={onUndo}
+          title="Undo (Ctrl+Z)"
+          style={{ width: 32, height: 32, opacity: canUndo ? 1 : 0.4 }}
         >
-          {Math.round(zoom * 100)}%
+          <RotateCcw size={16} />
         </button>
-        <button className="icon-btn" onClick={onZoomIn} title="Zoom In (+)" style={{ width: 32, height: 32 }}>
-          <Plus size={14} />
+
+        <button
+          className="icon-btn"
+          onClick={() => {}}
+          title="Layers & Shading"
+          style={{ width: 32, height: 32 }}
+        >
+          {/* Custom hatched square icon matching reference ▨ */}
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <rect x="2" y="2" width="12" height="12" rx="2" />
+            <line x1="2" y1="6" x2="6" y2="2" />
+            <line x1="2" y1="11" x2="11" y2="2" />
+            <line x1="5" y1="14" x2="14" y2="5" />
+            <line x1="10" y1="14" x2="14" y2="10" />
+          </svg>
+        </button>
+
+        <button
+          className="icon-btn"
+          onClick={() => {}}
+          title="Grid Layout View"
+          style={{ width: 32, height: 32 }}
+        >
+          <Grid size={16} />
         </button>
       </div>
-    </div>
+
+      {/* Main Bottom Floating Pill Toolbar with Purple Outline */}
+      <div className="bottom-toolbar-container">
+        {/* Floating Tooltip above active tool */}
+        <div className="toolbar-tooltip-pill">
+          {getToolName(activeTool)}
+        </div>
+
+        <div className="bottom-toolbar">
+          {/* 1. Selection Cursor */}
+          <button
+            className={`toolbar-btn ${activeTool === 'select' ? 'active' : ''}`}
+            onClick={() => onSelectTool('select')}
+            title="Select (V)"
+          >
+            <MousePointer2 size={18} />
+          </button>
+
+          {/* 2. Hand Pan */}
+          <button
+            className={`toolbar-btn ${activeTool === 'hand' ? 'active' : ''}`}
+            onClick={() => onSelectTool('hand')}
+            title="Hand / Pan (H)"
+          >
+            <Hand size={18} />
+          </button>
+
+          {/* 3. Sticky Note (Active in reference) */}
+          <button
+            className={`toolbar-btn ${activeTool === 'note' || activeTool === 'rectangle' ? 'active' : ''}`}
+            onClick={() => onSelectTool('note')}
+            title="Sticky Note (N)"
+          >
+            <StickyNote size={18} fill={activeTool === 'note' || activeTool === 'rectangle' ? '#7c3aed' : 'none'} />
+          </button>
+
+          {/* 4. Polygon / Star Shape */}
+          <button
+            className={`toolbar-btn ${activeTool === 'shape' || activeTool === 'circle' ? 'active' : ''}`}
+            onClick={() => onSelectTool('shape')}
+            title="Shapes (S)"
+          >
+            <Hexagon size={18} />
+          </button>
+
+          {/* 5. Arrow Tool */}
+          <button
+            className={`toolbar-btn ${activeTool === 'arrow' ? 'active' : ''}`}
+            onClick={() => onSelectTool('arrow')}
+            title="Arrow (A)"
+          >
+            <ArrowUp size={18} />
+          </button>
+
+          {/* 6. Text Tool */}
+          <button
+            className={`toolbar-btn ${activeTool === 'text' ? 'active' : ''}`}
+            onClick={() => onSelectTool('text')}
+            title="Text (T)"
+          >
+            <Type size={18} />
+          </button>
+
+          {/* 7. Image / Media Insert */}
+          <button
+            className={`toolbar-btn ${activeTool === 'image' ? 'active' : ''}`}
+            onClick={() => onSelectTool('image')}
+            title="Add Media / Screenshot"
+          >
+            <ImageIcon size={18} />
+          </button>
+
+          {/* 8. Link Tool */}
+          <button
+            className={`toolbar-btn ${activeTool === 'link' ? 'active' : ''}`}
+            onClick={() => onSelectTool('link')}
+            title="Add Link (K)"
+          >
+            <Link2 size={18} />
+          </button>
+
+          {/* 9. Comments */}
+          <button
+            className={`toolbar-btn ${activeTool === 'comment' ? 'active' : ''}`}
+            onClick={() => onSelectTool('comment')}
+            title="Add Comment (C)"
+          >
+            <MessageSquare size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom Right Floating Chat / AI Collaborator Button (•••) */}
+      <button
+        className="bottom-right-chat-btn"
+        title="Collaborative Chat / Comments"
+        onClick={() => {}}
+      >
+        <MessageCircle size={22} fill="#ffffff" stroke="#7c3aed" />
+      </button>
+    </>
   );
 };
+

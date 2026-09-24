@@ -108,7 +108,7 @@ export const App: React.FC = () => {
   };
 
   // Tool Selection & Annotations
-  const handleSelectTool = (tool: AnnotationTool) => {
+  const handleSelectTool = (tool: any) => {
     setState((prev) => ({ ...prev, activeTool: tool }));
   };
 
@@ -149,6 +149,18 @@ export const App: React.FC = () => {
     });
   };
 
+  const handleZoomIn = () => {
+    setState((prev) => ({ ...prev, zoom: Math.min(2.5, +(prev.zoom + 0.1).toFixed(2)) }));
+  };
+
+  const handleZoomOut = () => {
+    setState((prev) => ({ ...prev, zoom: Math.max(0.2, +(prev.zoom - 0.1).toFixed(2)) }));
+  };
+
+  const handleResetZoom = () => {
+    setState((prev) => ({ ...prev, zoom: 0.4 }));
+  };
+
   // Keyboard Shortcuts Listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -171,26 +183,24 @@ export const App: React.FC = () => {
         setShowShortcutsModal((prev) => !prev);
       } else if (e.key.toLowerCase() === 'v') {
         handleSelectTool('select');
-      } else if (e.key.toLowerCase() === 'c') {
-        handleSelectTool('crop');
-      } else if (e.key.toLowerCase() === 'p') {
-        handleSelectTool('pen');
+      } else if (e.key.toLowerCase() === 'n') {
+        handleSelectTool('note');
+      } else if (e.key.toLowerCase() === 'h') {
+        handleSelectTool('hand');
+      } else if (e.key.toLowerCase() === 's') {
+        handleSelectTool('shape');
       } else if (e.key.toLowerCase() === 'a' && !e.shiftKey && !e.ctrlKey && !e.metaKey) {
         handleSelectTool('arrow');
       } else if (e.key.toLowerCase() === 't') {
         handleSelectTool('text');
-      } else if (e.key.toLowerCase() === 'r') {
-        handleSelectTool('rectangle');
-      } else if (e.key.toLowerCase() === 'o') {
-        handleSelectTool('circle');
-      } else if (e.key.toLowerCase() === 'b') {
-        handleSelectTool('redact');
+      } else if (e.key.toLowerCase() === 'p') {
+        handleSelectTool('pen');
       } else if (e.key === '=' || e.key === '+') {
-        setState((prev) => ({ ...prev, zoom: Math.min(2.5, prev.zoom + 0.1) }));
+        handleZoomIn();
       } else if (e.key === '-') {
-        setState((prev) => ({ ...prev, zoom: Math.max(0.4, prev.zoom - 0.1) }));
+        handleZoomOut();
       } else if (e.key === '0') {
-        setState((prev) => ({ ...prev, zoom: 1.0 }));
+        handleResetZoom();
       }
     };
 
@@ -200,7 +210,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      {/* Top Header */}
+      {/* Top Header Matching Reference */}
       <TopNav
         state={state}
         onUploadFile={handleUploadFile}
@@ -208,6 +218,9 @@ export const App: React.FC = () => {
         onToggleSmartCrop={() => setState((prev) => ({ ...prev, smartCropEnabled: !prev.smartCropEnabled }))}
         onOpenExportModal={() => setShowExportModal(true)}
         onOpenShortcutsModal={() => setShowShortcutsModal(true)}
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
+        onResetZoom={handleResetZoom}
       />
 
       {/* Main Workspace */}
@@ -219,7 +232,7 @@ export const App: React.FC = () => {
           onUploadFile={handleUploadFile}
         />
 
-        {/* Floating Bottom Toolbar */}
+        {/* Floating Bottom Toolbar Matching Reference */}
         <BottomToolbar
           activeTool={state.activeTool}
           onSelectTool={handleSelectTool}
@@ -230,9 +243,9 @@ export const App: React.FC = () => {
           onUndo={handleUndo}
           onRedo={handleRedo}
           zoom={state.zoom}
-          onZoomIn={() => setState((prev) => ({ ...prev, zoom: Math.min(2.5, prev.zoom + 0.1) }))}
-          onZoomOut={() => setState((prev) => ({ ...prev, zoom: Math.max(0.4, prev.zoom - 0.1) }))}
-          onResetZoom={() => setState((prev) => ({ ...prev, zoom: 1.0 }))}
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
+          onResetZoom={handleResetZoom}
         />
 
         {/* Right Configuration Panel */}
@@ -265,3 +278,4 @@ export const App: React.FC = () => {
 };
 
 export default App;
+

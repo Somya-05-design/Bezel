@@ -112,8 +112,8 @@ export const INITIAL_STATE: EditorState = {
     boomerang: false,
   },
 
-  activeTool: 'select',
-  annotationColor: '#ef4444',
+  activeTool: 'note' as any,
+  annotationColor: '#7c3aed',
   annotationStrokeWidth: 4,
   annotationFontSize: 24,
   annotations: [],
@@ -125,7 +125,7 @@ export const INITIAL_STATE: EditorState = {
   exportFormat: 'png',
   exportQuality: 0.95,
 
-  zoom: 1.0,
+  zoom: 0.4,
   isExporting: false,
   showShortcutsModal: false,
   activeSidebarTab: 'frame',

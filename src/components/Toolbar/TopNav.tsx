@@ -1,11 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
-  Download,
+  ChevronDown,
   HelpCircle,
-  Layers,
+  LayoutGrid,
+  Map,
+  Minus,
+  MousePointer,
+  Plus,
+  Share2,
   Sparkles,
   Upload,
   Video,
+  Download,
+  FileSpreadsheet,
 } from 'lucide-react';
 import { EditorState } from '../../core/state/store';
 import { EXPORT_PRESETS } from '../../core/state/presets';
@@ -18,6 +25,9 @@ interface TopNavProps {
   onToggleSmartCrop: () => void;
   onOpenExportModal: () => void;
   onOpenShortcutsModal: () => void;
+  onZoomIn?: () => void;
+  onZoomOut?: () => void;
+  onResetZoom?: () => void;
 }
 
 export const TopNav: React.FC<TopNavProps> = ({
@@ -27,8 +37,14 @@ export const TopNav: React.FC<TopNavProps> = ({
   onToggleSmartCrop,
   onOpenExportModal,
   onOpenShortcutsModal,
+  onZoomIn,
+  onZoomOut,
+  onResetZoom,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeTab, setActiveTab] = useState<'board' | 'task_manager'>('board');
+  const [boardName, setBoardName] = useState<string>('untitledboard');
+  const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,67 +55,128 @@ export const TopNav: React.FC<TopNavProps> = ({
 
   return (
     <header className="top-nav">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <div className="brand-logo">
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 10,
-              background: 'linear-gradient(135deg, #6366f1, #d946ef)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.4)',
-            }}
-          >
-            <Sparkles size={18} />
-          </div>
-          <span>BEZEL</span>
-          <span className="brand-badge">Studio</span>
+      {/* LEFT SECTION: Logo, Segmented View Toggle, Breadcrumb */}
+      <div className="nav-left-section">
+        {/* Colorful Creative Sunburst / Pencil Badge (as in reference) */}
+        <div className="brand-sun-badge" title="Bezel Whiteboard">
+          <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 6V2" stroke="#f97316" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M23 9L26 6" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M26 16H30" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M9 9L6 6" stroke="#ec4899" strokeWidth="2.5" strokeLinecap="round" />
+            <path d="M6 16H2" stroke="#8b5cf6" strokeWidth="2.5" strokeLinecap="round" />
+            {/* Pencil Tip Center */}
+            <path d="M13 14L16 26L19 14L16 11L13 14Z" fill="#6366f1" />
+            <path d="M14.5 22L16 26L17.5 22H14.5Z" fill="#1e1b4b" />
+            <path d="M11 16L13 14L16 11L19 14L21 16" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
 
-        {/* Export Dimensions Preset Dropdown */}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <select
-            value={state.exportPreset.id}
-            onChange={(e) => {
-              const preset = EXPORT_PRESETS.find((p) => p.id === e.target.value);
-              if (preset) onSelectPreset(preset);
-            }}
-            style={{
-              background: 'var(--bg-surface-elevated)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 'var(--radius-md)',
-              padding: '6px 12px',
-              fontSize: '0.8rem',
-              fontWeight: 500,
-              cursor: 'pointer',
-            }}
+        {/* Segmented Switcher: [ Board | Task Manager ] */}
+        <div className="segmented-nav-group">
+          <button
+            className={`segmented-nav-btn ${activeTab === 'board' ? 'active' : ''}`}
+            onClick={() => setActiveTab('board')}
           >
-            {EXPORT_PRESETS.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name}
-              </option>
-            ))}
-          </select>
+            <LayoutGrid size={14} />
+            <span>Board</span>
+          </button>
+          <button
+            className={`segmented-nav-btn ${activeTab === 'task_manager' ? 'active' : ''}`}
+            onClick={() => setActiveTab('task_manager')}
+          >
+            <FileSpreadsheet size={14} />
+            <span>Task Manager</span>
+          </button>
+        </div>
+
+        <div className="nav-divider" />
+
+        {/* Breadcrumb Title: Board / untitledboard ⌄ */}
+        <div className="breadcrumb-title" onClick={() => setIsEditingTitle(true)}>
+          <span>Board</span>
+          <span style={{ color: 'var(--text-muted)' }}>/</span>
+          {isEditingTitle ? (
+            <input
+              type="text"
+              value={boardName}
+              autoFocus
+              onChange={(e) => setBoardName(e.target.value)}
+              onBlur={() => setIsEditingTitle(false)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') setIsEditingTitle(false);
+              }}
+              style={{
+                border: 'none',
+                background: 'transparent',
+                fontWeight: 600,
+                fontSize: '0.82rem',
+                color: 'var(--text-primary)',
+                width: `${Math.max(100, boardName.length * 9)}px`,
+              }}
+            />
+          ) : (
+            <strong>{boardName}</strong>
+          )}
+          <ChevronDown size={14} color="#94a3b8" />
         </div>
       </div>
 
-      <div className="nav-actions">
-        {/* Smart Crop Toggle */}
+      {/* RIGHT SECTION: Collaborators, Help, Avatar, Share Button, Zoom, Minimap */}
+      <div className="nav-right-section">
+        {/* Collaborators Stack */}
+        <div className="collaborator-group">
+          <span className="shared-with-label">Shared With</span>
+          <div className="avatar-stack">
+            {/* Avatar 1 */}
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&h=64&fit=crop&crop=faces"
+              alt="Collab 1"
+              className="avatar-stack-item"
+            />
+            {/* Avatar 2 */}
+            <img
+              src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=64&h=64&fit=crop&crop=faces"
+              alt="Collab 2"
+              className="avatar-stack-item"
+            />
+            {/* Avatar 3 */}
+            <img
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=64&h=64&fit=crop&crop=faces"
+              alt="Collab 3"
+              className="avatar-stack-item"
+            />
+          </div>
+        </div>
+
+        {/* Help & Pointer Status Icons */}
         <button
-          className={`icon-btn ${state.smartCropEnabled ? 'active' : ''}`}
-          onClick={onToggleSmartCrop}
-          title={`Smart Crop: ${state.smartCropEnabled ? 'ON' : 'OFF'} (Shift+A)`}
-          style={{ width: 'auto', padding: '0 12px', gap: '6px', fontSize: '0.78rem', fontWeight: 600 }}
+          className="icon-btn"
+          onClick={onOpenShortcutsModal}
+          title="Shortcuts & Help (?)"
+          style={{ width: 28, height: 28, color: '#94a3b8' }}
         >
-          <Layers size={15} />
-          <span>Smart Fit</span>
+          <HelpCircle size={16} />
         </button>
 
-        {/* Upload File Button */}
+        <button
+          className="icon-btn"
+          onClick={onToggleSmartCrop}
+          title={`Smart Fit / Mouse Sync: ${state.smartCropEnabled ? 'Active' : 'Off'}`}
+          style={{ width: 28, height: 28, color: state.smartCropEnabled ? '#7c3aed' : '#94a3b8' }}
+        >
+          <MousePointer size={15} />
+        </button>
+
+        {/* Current User Profile Avatar with Gold Ring */}
+        <img
+          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=faces"
+          alt="My Profile"
+          className="user-profile-avatar"
+          title="Razy (You)"
+        />
+
+        {/* Upload Hidden Input & Trigger */}
         <input
           type="file"
           ref={fileInputRef}
@@ -107,34 +184,48 @@ export const TopNav: React.FC<TopNavProps> = ({
           accept="image/*,video/*"
           style={{ display: 'none' }}
         />
+
+        {/* Vibrant Purple Share / Export Button */}
+        <button className="btn-share" onClick={onOpenExportModal}>
+          <span>Share</span>
+        </button>
+
+        {/* Zoom Capsule: [ -  40% ⌄  + ] */}
+        <div className="zoom-capsule">
+          <button
+            className="zoom-btn"
+            onClick={onZoomOut}
+            title="Zoom Out (-)"
+          >
+            <Minus size={13} />
+          </button>
+          <span
+            className="zoom-value-text"
+            onClick={onResetZoom}
+            title="Click to reset 100%"
+          >
+            {Math.round(state.zoom * 100)}% ⌄
+          </span>
+          <button
+            className="zoom-btn"
+            onClick={onZoomIn}
+            title="Zoom In (+)"
+          >
+            <Plus size={13} />
+          </button>
+        </div>
+
+        {/* Minimap / Map Layout Button */}
         <button
           className="icon-btn"
           onClick={() => fileInputRef.current?.click()}
-          style={{ width: 'auto', padding: '0 14px', gap: '6px', fontSize: '0.8rem', fontWeight: 600 }}
+          title="Upload Screenshot / Canvas Map"
+          style={{ width: 32, height: 32, color: '#475569' }}
         >
-          <Upload size={16} />
-          <span>Upload Media</span>
-        </button>
-
-        {/* Shortcuts / Help */}
-        <button
-          className="icon-btn"
-          onClick={onOpenShortcutsModal}
-          title="Keyboard Shortcuts (?)"
-        >
-          <HelpCircle size={18} />
-        </button>
-
-        {/* Export CTA */}
-        <button className="gradient-btn" onClick={onOpenExportModal}>
-          {state.sourceMedia?.type === 'video' || state.kenBurns.enabled ? (
-            <Video size={17} />
-          ) : (
-            <Download size={17} />
-          )}
-          <span>Export Studio</span>
+          <Map size={17} />
         </button>
       </div>
     </header>
   );
 };
+
