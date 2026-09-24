@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import {
   ChevronDown,
   HelpCircle,
-  LayoutGrid,
   Map,
   Minus,
   MousePointer,
@@ -12,7 +11,6 @@ import {
   Upload,
   Video,
   Download,
-  FileSpreadsheet,
 } from 'lucide-react';
 import { EditorState } from '../../core/state/store';
 import { EXPORT_PRESETS } from '../../core/state/presets';
@@ -42,7 +40,6 @@ export const TopNav: React.FC<TopNavProps> = ({
   onResetZoom,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeTab, setActiveTab] = useState<'board' | 'task_manager'>('board');
   const [boardName, setBoardName] = useState<string>('untitledboard');
   const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
 
@@ -55,7 +52,7 @@ export const TopNav: React.FC<TopNavProps> = ({
 
   return (
     <header className="top-nav">
-      {/* LEFT SECTION: Logo, Segmented View Toggle, Breadcrumb */}
+      {/* LEFT SECTION: Logo & Breadcrumb */}
       <div className="nav-left-section">
         {/* Colorful Creative Sunburst / Pencil Badge (as in reference) */}
         <div className="brand-sun-badge" title="Bezel Whiteboard">
@@ -70,24 +67,6 @@ export const TopNav: React.FC<TopNavProps> = ({
             <path d="M14.5 22L16 26L17.5 22H14.5Z" fill="#1e1b4b" />
             <path d="M11 16L13 14L16 11L19 14L21 16" stroke="#38bdf8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-        </div>
-
-        {/* Segmented Switcher: [ Board | Task Manager ] */}
-        <div className="segmented-nav-group">
-          <button
-            className={`segmented-nav-btn ${activeTab === 'board' ? 'active' : ''}`}
-            onClick={() => setActiveTab('board')}
-          >
-            <LayoutGrid size={14} />
-            <span>Board</span>
-          </button>
-          <button
-            className={`segmented-nav-btn ${activeTab === 'task_manager' ? 'active' : ''}`}
-            onClick={() => setActiveTab('task_manager')}
-          >
-            <FileSpreadsheet size={14} />
-            <span>Task Manager</span>
-          </button>
         </div>
 
         <div className="nav-divider" />
