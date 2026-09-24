@@ -74,7 +74,7 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
     startTimeRef.current = Date.now();
 
     const renderLoop = () => {
-      if (!isRunning) return;
+      if (!isRunning || !state.sourceMedia || !state.sourceMedia.element) return;
 
       const targetW = state.exportPreset.width;
       const targetH = state.exportPreset.height;
@@ -94,13 +94,9 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
         );
       }
 
-      // Default sample element if no media uploaded yet
-      let sourceElement: HTMLImageElement | HTMLVideoElement | HTMLCanvasElement =
-        state.sourceMedia?.element || getPlaceholderGraphic();
-
       compositeFrame(
         {
-          sourceElement,
+          sourceElement: state.sourceMedia.element,
           frame: state.currentFrame,
           frameColor: state.frameColor,
           background: state.background,
@@ -116,13 +112,14 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
         canvas
       );
 
-      // Request next frame if video or Ken Burns is active
-      if (state.sourceMedia?.type === 'video' || state.kenBurns.enabled) {
+      if (state.sourceMedia.type === 'video' || state.kenBurns.enabled) {
         animationFrameRef.current = requestAnimationFrame(renderLoop);
       }
     };
 
-    renderLoop();
+    if (state.sourceMedia) {
+      renderLoop();
+    }
 
     return () => {
       isRunning = false;
@@ -254,6 +251,7 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
           style={{
             maxWidth: '100%',
             maxHeight: '75vh',
+            display: state.sourceMedia ? 'block' : 'none',
             cursor:
               state.activeTool === 'pen' || state.activeTool === 'arrow'
                 ? 'crosshair'
@@ -264,42 +262,29 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
           onMouseUp={handleMouseUp}
         />
 
-        {/* Interactive Reference Whiteboard Elements Layer (Sticky Note + Floating Bar) */}
-        {!state.sourceMedia && (
-          <div className="canvas-interactive-layer">
-            {/* Ghost Note on the Right */}
-            <div
-              className="reference-sticky-ghost"
-              style={{
-                top: '40%',
-                left: 'calc(50% + 120px)',
-                transform: 'translate(-50%, -50%)',
-              }}
-            />
-
-            {/* Main Sky-Blue Sticky Note (Selected) */}
+        {/* Whiteboard Interactive Canvas Layer */}
+        <div className="canvas-interactive-layer">
+          {/* Main Selected Sky-Blue Sticky Note */}
+          <div className="reference-sticky-container">
             <div
               className="reference-sticky-note"
               style={{
-                top: '40%',
-                left: 'calc(50% - 100px)',
-                transform: 'translate(-50%, -50%)',
                 backgroundColor: noteColor,
               }}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Corner Handles */}
-              <div className="selection-handle handle-tl" />
-              <div className="selection-handle handle-tr" />
-              <div className="selection-handle handle-bl" />
-              <div className="selection-handle handle-br" />
+              {/* 4 Corner Square Cyan Handles */}
+              <div className="selection-handle-corner handle-tl" />
+              <div className="selection-handle-corner handle-tr" />
+              <div className="selection-handle-corner handle-bl" />
+              <div className="selection-handle-corner handle-br" />
 
-              {/* Rotation Handle */}
-              <div className="handle-rotate" />
+              {/* 3 Midpoint Dots */}
+              <div className="selection-dot-mid dot-top" />
+              <div className="selection-dot-mid dot-left" />
+              <div className="selection-dot-mid dot-bottom" />
 
-              {/* Duplicate / Add Node (+) button */}
+              {/* Quick Add Node (+) Button on Right Edge */}
               <button
                 className="sticky-add-node-btn"
                 title="Add connected note"
@@ -308,7 +293,7 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
                   setNoteText('New note');
                 }}
               >
-                <Plus size={14} />
+                <Plus size={16} strokeWidth={2.5} />
               </button>
 
               {/* Note Content */}
@@ -324,9 +309,9 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
                       background: 'transparent',
                       border: 'none',
                       resize: 'none',
-                      color: '#0369a1',
+                      color: '#075985',
                       fontFamily: 'inherit',
-                      fontSize: fontSize === 'Small' ? '0.9rem' : fontSize === 'Medium' ? '1.1rem' : '1.3rem',
+                      fontSize: fontSize === 'Small' ? '1rem' : fontSize === 'Medium' ? '1.2rem' : '1.4rem',
                       fontWeight: isBold ? 700 : 500,
                       textDecoration: isStrikethrough ? 'line-through' : 'none',
                     }}
@@ -335,14 +320,14 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
                   <div
                     onClick={() => setIsEditingNote(true)}
                     style={{
-                      color: '#0369a1',
-                      fontSize: fontSize === 'Small' ? '0.9rem' : fontSize === 'Medium' ? '1.1rem' : '1.3rem',
+                      color: '#075985',
+                      fontSize: fontSize === 'Small' ? '1rem' : fontSize === 'Medium' ? '1.2rem' : '1.4rem',
                       fontWeight: isBold ? 700 : 500,
                       textDecoration: isStrikethrough ? 'line-through' : 'none',
                       cursor: 'text',
                     }}
                   >
-                    {noteText || 'Click to add text'}
+                    {noteText}
                   </div>
                 )}
               </div>
@@ -350,9 +335,9 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
               {/* Author signature at bottom left */}
               <div
                 style={{
-                  fontSize: '0.72rem',
+                  fontSize: '0.78rem',
                   fontWeight: 500,
-                  color: 'rgba(3, 105, 161, 0.7)',
+                  color: '#0369a1',
                 }}
               >
                 Razy
@@ -361,9 +346,6 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
               {/* Floating Contextual Dark Formatting Bar Beneath Selected Sticky */}
               <div
                 className="floating-format-bar"
-                style={{
-                  top: 'calc(100% + 24px)',
-                }}
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Color Swatch Dropdown */}
@@ -399,7 +381,7 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
                         zIndex: 50,
                       }}
                     >
-                      {['#7dd3fc', '#fde047', '#86efac', '#fca5a5', '#d8b4fe', '#fdba74'].map((c) => (
+                      {['#7ec6f8', '#fde047', '#86efac', '#fca5a5', '#d8b4fe', '#fdba74'].map((c) => (
                         <button
                           key={c}
                           onClick={() => {
@@ -476,12 +458,19 @@ export const CanvasPreview: React.FC<CanvasPreviewProps> = ({
                   title="Edit note"
                   onClick={() => setIsEditingNote(true)}
                 >
-                  <Edit3 size={14} />
+                  {/* Stylized pencil svg */}
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                  </svg>
                 </button>
               </div>
             </div>
           </div>
-        )}
+
+          {/* Ghost Note on the Right */}
+          <div className="reference-sticky-ghost" />
+        </div>
       </div>
 
       {/* Drag & Drop Overlay */}

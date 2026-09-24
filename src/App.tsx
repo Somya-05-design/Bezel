@@ -208,12 +208,17 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const [showSidePanel, setShowSidePanel] = useState<boolean>(false);
+
   return (
     <div className="app-container">
       {/* Top Header Matching Reference */}
       <TopNav
         state={state}
-        onUploadFile={handleUploadFile}
+        onUploadFile={(file) => {
+          handleUploadFile(file);
+          setShowSidePanel(true);
+        }}
         onSelectPreset={(preset: ExportPreset) => setState((prev) => ({ ...prev, exportPreset: preset }))}
         onToggleSmartCrop={() => setState((prev) => ({ ...prev, smartCropEnabled: !prev.smartCropEnabled }))}
         onOpenExportModal={() => setShowExportModal(true)}
@@ -248,24 +253,28 @@ export const App: React.FC = () => {
           onResetZoom={handleResetZoom}
         />
 
-        {/* Right Configuration Panel */}
-        <SidePanel
-          state={state}
-          onSelectFrame={(frame: FrameDefinition) => setState((prev) => ({ ...prev, currentFrame: frame }))}
-          onSelectColor={(colorId: FrameColorId) => setState((prev) => ({ ...prev, frameColor: colorId }))}
-          onChangeDeviceScale={(scale: number) => setState((prev) => ({ ...prev, deviceScale: scale }))}
-          onToggleReflections={() => setState((prev) => ({ ...prev, showReflections: !prev.showReflections }))}
-          onUpdateBackground={(bg: Partial<BackgroundConfig>) =>
-            setState((prev) => ({ ...prev, background: { ...prev.background, ...bg } }))
-          }
-          onApplyPaletteGradient={(colors: string[]) =>
-            setState((prev) => ({ ...prev, background: { ...prev.background, colors } }))
-          }
-          onUpdateKenBurns={(kb: Partial<KenBurnsConfig>) =>
-            setState((prev) => ({ ...prev, kenBurns: { ...prev.kenBurns, ...kb } }))
-          }
-          onSetSidebarTab={(tab) => setState((prev) => ({ ...prev, activeSidebarTab: tab }))}
-        />
+        {/* Floating Drawer Side Panel (Opened when active or configuring device) */}
+        {showSidePanel && (
+          <div className="side-panel-drawer">
+            <SidePanel
+              state={state}
+              onSelectFrame={(frame: FrameDefinition) => setState((prev) => ({ ...prev, currentFrame: frame }))}
+              onSelectColor={(colorId: FrameColorId) => setState((prev) => ({ ...prev, frameColor: colorId }))}
+              onChangeDeviceScale={(scale: number) => setState((prev) => ({ ...prev, deviceScale: scale }))}
+              onToggleReflections={() => setState((prev) => ({ ...prev, showReflections: !prev.showReflections }))}
+              onUpdateBackground={(bg: Partial<BackgroundConfig>) =>
+                setState((prev) => ({ ...prev, background: { ...prev.background, ...bg } }))
+              }
+              onApplyPaletteGradient={(colors: string[]) =>
+                setState((prev) => ({ ...prev, background: { ...prev.background, colors } }))
+              }
+              onUpdateKenBurns={(kb: Partial<KenBurnsConfig>) =>
+                setState((prev) => ({ ...prev, kenBurns: { ...prev.kenBurns, ...kb } }))
+              }
+              onSetSidebarTab={(tab) => setState((prev) => ({ ...prev, activeSidebarTab: tab }))}
+            />
+          </div>
+        )}
       </div>
 
       {/* Export Studio Modal */}
