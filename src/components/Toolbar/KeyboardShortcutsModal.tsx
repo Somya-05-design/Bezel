@@ -1,74 +1,116 @@
-import React from 'react';
-import { Keyboard, X } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Keyboard, X, Sparkles, Command } from 'lucide-react';
 
-interface KeyboardShortcutsModalProps {
+interface KeyboardShortcutsPanelProps {
   onClose: () => void;
 }
 
-const SHORTCUTS = [
-  { key: 'V', desc: 'Select / Move Tool' },
-  { key: 'C', desc: 'Crop Tool' },
-  { key: 'P', desc: 'Pen / Freehand Tool' },
-  { key: 'A', desc: 'Arrow Tool' },
-  { key: 'T', desc: 'Text Tool' },
-  { key: 'R', desc: 'Rectangle Shape Tool' },
-  { key: 'O', desc: 'Circle Shape Tool' },
-  { key: 'B', desc: 'Blur / Redact Tool' },
-  { key: 'Shift + A', desc: 'Toggle Smart Fit / Crop' },
-  { key: 'Ctrl / ⌘ + Z', desc: 'Undo Action' },
-  { key: 'Ctrl / ⌘ + Shift + Z', desc: 'Redo Action' },
-  { key: 'Ctrl / ⌘ + E', desc: 'Open Export Studio' },
-  { key: '+ / -', desc: 'Zoom In / Out' },
-  { key: '0', desc: 'Reset Viewport Zoom' },
-  { key: '?', desc: 'Show Shortcuts Cheat Sheet' },
+interface ShortcutCategory {
+  title: string;
+  items: { key: string; desc: string }[];
+}
+
+const SHORTCUT_GROUPS: ShortcutCategory[] = [
+  {
+    title: 'Tools & Annotation',
+    items: [
+      { key: 'V', desc: 'Select / Move' },
+      { key: 'H', desc: 'Hand / Pan Canvas' },
+      { key: 'N', desc: 'Sticky Note' },
+      { key: 'S', desc: 'Shapes & Stars' },
+      { key: 'A', desc: 'Arrow Line' },
+      { key: 'T', desc: 'Text Annotation' },
+      { key: 'K', desc: 'Insert Link' },
+      { key: 'C', desc: 'Comments & Notes' },
+    ],
+  },
+  {
+    title: 'Actions & Engine',
+    items: [
+      { key: 'Ctrl + Z', desc: 'Undo Action' },
+      { key: 'Ctrl + Shift + Z', desc: 'Redo Action' },
+      { key: 'Ctrl + E', desc: 'Open Export Studio' },
+      { key: 'Shift + A', desc: 'Toggle Smart Fit' },
+    ],
+  },
+  {
+    title: 'Zoom & Viewport',
+    items: [
+      { key: '+ / -', desc: 'Zoom In / Out' },
+      { key: '0', desc: 'Reset Zoom (100%)' },
+      { key: '?', desc: 'Toggle Shortcuts Panel' },
+    ],
+  },
 ];
 
-export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsModalProps> = ({ onClose }) => {
-  return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal-card" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
-        <div className="modal-header">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Keyboard size={20} color="#818cf8" />
-            <div className="modal-title">Keyboard Shortcuts</div>
-          </div>
-          <button className="icon-btn" onClick={onClose} style={{ width: 32, height: 32 }}>
-            <X size={16} />
-          </button>
-        </div>
+export const KeyboardShortcutsModal: React.FC<KeyboardShortcutsPanelProps> = ({ onClose }) => {
+  const panelRef = useRef<HTMLDivElement>(null);
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxHeight: '60vh', overflowY: 'auto' }}>
-          {SHORTCUTS.map((s, idx) => (
-            <div
-              key={idx}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '8px 12px',
-                borderRadius: 'var(--radius-sm)',
-                background: 'var(--bg-surface-elevated)',
-                border: '1px solid var(--border-subtle)',
-              }}
-            >
-              <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{s.desc}</span>
-              <kbd
-                style={{
-                  padding: '3px 8px',
-                  borderRadius: 'var(--radius-xs)',
-                  background: 'var(--bg-surface-active)',
-                  border: '1px solid var(--border-medium)',
-                  fontSize: '0.72rem',
-                  fontFamily: 'var(--font-mono)',
-                  fontWeight: 600,
-                  color: '#a5b4fc',
-                }}
-              >
-                {s.key}
-              </kbd>
-            </div>
-          ))}
+  // Close on Escape or click outside
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        panelRef.current &&
+        !panelRef.current.contains(e.target as Node) &&
+        !(e.target as HTMLElement).closest('.bottom-right-help-btn')
+      ) {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="shortcuts-side-container" ref={panelRef} role="dialog" aria-label="Keyboard Shortcuts">
+      {/* Header */}
+      <div className="shortcuts-side-header">
+        <div className="shortcuts-title-group">
+          <div className="shortcuts-icon-pill">
+            <Keyboard size={16} />
+          </div>
+          <div>
+            <div className="shortcuts-side-title">Keyboard Shortcuts</div>
+            <div className="shortcuts-side-subtitle">Quick access reference</div>
+          </div>
         </div>
+        <button
+          className="icon-btn shortcuts-close-btn"
+          onClick={onClose}
+          title="Close (Esc)"
+          aria-label="Close shortcuts panel"
+        >
+          <X size={16} />
+        </button>
+      </div>
+
+      {/* Content Groups */}
+      <div className="shortcuts-side-body">
+        {SHORTCUT_GROUPS.map((group, gIdx) => (
+          <div key={gIdx} className="shortcuts-group-block">
+            <div className="shortcuts-group-heading">{group.title}</div>
+            <div className="shortcuts-group-list">
+              {group.items.map((item, idx) => (
+                <div key={idx} className="shortcuts-item-row">
+                  <span className="shortcuts-item-label">{item.desc}</span>
+                  <kbd className="shortcuts-item-kbd">{item.key}</kbd>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

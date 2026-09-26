@@ -494,13 +494,43 @@
 }
 
 /* ==========================================================================
-   BOTTOM RIGHT THEME SWITCHER
+   BOTTOM RIGHT FLOATING ACTIONS (Help & Theme Switcher)
    ========================================================================== */
-.theme-switcher-wrapper {
+.bottom-right-actions {
   position: absolute;
   bottom: 24px;
   right: 28px;
   z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.bottom-right-help-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bottom-right-help-btn:hover {
+  transform: translateY(-2px) scale(1.06);
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  background: #f8fafc;
+}
+
+.theme-switcher-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -1020,6 +1050,216 @@
   background: #16171d;
   border-color: #272832;
   color: #f8fafc;
+}
+
+[data-theme="dark"] .bottom-right-help-btn {
+  background: #181920;
+  border-color: #272832;
+  color: #94a3b8;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .bottom-right-help-btn:hover {
+  background: #22232d;
+  color: #f8fafc;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   KEYBOARD SHORTCUTS SIDE CONTAINER
+   ========================================================================== */
+.shortcuts-side-container {
+  position: fixed;
+  top: 80px;
+  right: 24px;
+  width: 330px;
+  max-height: calc(100vh - 120px);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  z-index: 65;
+  overflow: hidden;
+  animation: shortcutsSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes shortcutsSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.shortcuts-side-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f5f9;
+  background: #f8fafc;
+}
+
+.shortcuts-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shortcuts-icon-pill {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #ede9fe;
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shortcuts-side-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.shortcuts-side-subtitle {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.shortcuts-close-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: #64748b;
+}
+.shortcuts-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.shortcuts-side-body {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+  max-height: calc(100vh - 190px);
+}
+
+.shortcuts-group-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shortcuts-group-heading {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  padding-left: 2px;
+}
+
+.shortcuts-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.shortcuts-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.shortcuts-item-row:hover {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+}
+
+.shortcuts-item-label {
+  font-size: 0.8rem;
+  color: #334155;
+  font-weight: 500;
+}
+
+.shortcuts-item-kbd {
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: #6366f1;
+}
+
+/* Dark Theme overrides for shortcuts side container */
+[data-theme="dark"] .shortcuts-side-container {
+  background: #16171d;
+  border-color: #272832;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .shortcuts-side-header {
+  background: #121318;
+  border-color: #23242e;
+}
+
+[data-theme="dark"] .shortcuts-icon-pill {
+  background: #2e284a;
+  color: #c4b5fd;
+}
+
+[data-theme="dark"] .shortcuts-side-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .shortcuts-side-subtitle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .shortcuts-close-btn {
+  color: #94a3b8;
+}
+[data-theme="dark"] .shortcuts-close-btn:hover {
+  background: #22232d;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .shortcuts-item-row {
+  background: #101116;
+  border-color: #23242e;
+}
+
+[data-theme="dark"] .shortcuts-item-row:hover {
+  background: #181922;
+  border-color: #2e303d;
+}
+
+[data-theme="dark"] .shortcuts-item-label {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .shortcuts-item-kbd {
+  background: #1f2029;
+  border-color: #37384b;
+  color: #a5b4fc;
 }
 
 

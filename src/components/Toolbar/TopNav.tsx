@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import {
   ChevronDown,
-  HelpCircle,
   Map,
   Minus,
   MousePointer,
@@ -22,7 +21,7 @@ interface TopNavProps {
   onSelectPreset: (preset: ExportPreset) => void;
   onToggleSmartCrop: () => void;
   onOpenExportModal: () => void;
-  onOpenShortcutsModal: () => void;
+  onOpenShortcutsModal?: () => void;
   onZoomIn?: () => void;
   onZoomOut?: () => void;
   onResetZoom?: () => void;
@@ -101,18 +100,8 @@ export const TopNav: React.FC<TopNavProps> = ({
         </div>
       </div>
 
-      {/* RIGHT SECTION: Help, Avatar, Zoom, Minimap */}
+      {/* RIGHT SECTION: Avatar, Zoom, Upload */}
       <div className="nav-right-section">
-        {/* Help & Pointer Status Icons */}
-        <button
-          className="icon-btn"
-          onClick={onOpenShortcutsModal}
-          title="Shortcuts & Help (?)"
-          style={{ width: 28, height: 28, color: '#94a3b8' }}
-        >
-          <HelpCircle size={16} />
-        </button>
-
         <button
           className="icon-btn"
           onClick={onToggleSmartCrop}
@@ -164,14 +153,14 @@ export const TopNav: React.FC<TopNavProps> = ({
           </button>
         </div>
 
-        {/* Minimap / Map Layout Button */}
+        {/* Upload Image / Video Button */}
         <button
           className="icon-btn"
           onClick={() => fileInputRef.current?.click()}
-          title="Upload Screenshot / Canvas Map"
+          title="Upload Screenshot / Video"
           style={{ width: 32, height: 32, color: '#475569' }}
         >
-          <Map size={17} />
+          <Upload size={17} />
         </button>
       </div>
     </header>

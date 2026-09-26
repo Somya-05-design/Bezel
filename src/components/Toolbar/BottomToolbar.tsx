@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   ArrowUp,
   Grid,
   Hand,
-  ImagePlus,
+  HelpCircle,
   Link2,
   MessageSquare,
   MousePointer,
@@ -11,6 +11,7 @@ import {
   Sparkles,
   StickyNote,
   Type,
+  Upload,
 } from 'lucide-react';
 import { AnnotationTool } from '../../core/types';
 import { ThemeSwitcher } from './ThemeSwitcher';
@@ -18,6 +19,8 @@ import { ThemeSwitcher } from './ThemeSwitcher';
 interface BottomToolbarProps {
   activeTool: AnnotationTool | 'note' | 'hand' | 'shape' | 'image' | 'link' | 'comment';
   onSelectTool: (tool: any) => void;
+  onUploadFile?: (file: File) => void;
+  onOpenShortcutsModal?: () => void;
   annotationColor?: string;
   onChangeColor?: (color: string) => void;
   canUndo: boolean;
@@ -33,9 +36,12 @@ interface BottomToolbarProps {
 export const BottomToolbar: React.FC<BottomToolbarProps> = ({
   activeTool,
   onSelectTool,
+  onUploadFile,
+  onOpenShortcutsModal,
   canUndo,
   onUndo,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   return (
     <>
       {/* Bottom Left Quick Controls: [ ↺  ▨  ⊞ ] */}
@@ -149,13 +155,30 @@ export const BottomToolbar: React.FC<BottomToolbarProps> = ({
             </div>
           </button>
 
-          {/* 7. Image Plus Tool 🖼️+ */}
+          {/* 7. Image / Media Upload Tool (Arrow Up in Tray) */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file && onUploadFile) {
+                onUploadFile(file);
+              }
+              // Reset input so re-uploading same file works
+              e.target.value = '';
+            }}
+            accept="image/*,video/*"
+            style={{ display: 'none' }}
+          />
           <button
             className={`toolbar-btn ${activeTool === 'image' ? 'active' : ''}`}
-            onClick={() => onSelectTool('image')}
-            title="Add Media"
+            onClick={() => {
+              onSelectTool('image');
+              fileInputRef.current?.click();
+            }}
+            title="Upload Image / Video"
           >
-            <ImagePlus size={18} />
+            <Upload size={18} strokeWidth={2} />
           </button>
 
           {/* 8. Link Chain Tool 🔗 */}
@@ -178,8 +201,20 @@ export const BottomToolbar: React.FC<BottomToolbarProps> = ({
         </div>
       </div>
 
-      {/* Bottom Right Floating Screen / Theme Selector Button */}
-      <ThemeSwitcher />
+      {/* Bottom Right Floating Actions (Shortcuts Help ? above Screen / Theme Switcher) */}
+      <div className="bottom-right-actions">
+        {onOpenShortcutsModal && (
+          <button
+            className="bottom-right-help-btn"
+            onClick={onOpenShortcutsModal}
+            title="Shortcuts & Help (?)"
+            aria-label="Keyboard Shortcuts & Help"
+          >
+            <HelpCircle size={18} strokeWidth={2} />
+          </button>
+        )}
+        <ThemeSwitcher />
+      </div>
     </>
   );
 };

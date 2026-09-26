@@ -241,6 +241,11 @@ export const App: React.FC = () => {
         <BottomToolbar
           activeTool={state.activeTool}
           onSelectTool={handleSelectTool}
+          onUploadFile={(file) => {
+            handleUploadFile(file);
+            setShowSidePanel(true);
+          }}
+          onOpenShortcutsModal={() => setShowShortcutsModal(true)}
           annotationColor={state.annotationColor}
           onChangeColor={(color) => setState((prev) => ({ ...prev, annotationColor: color }))}
           canUndo={state.undoStack.length > 0}
