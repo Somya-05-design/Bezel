@@ -13,6 +13,7 @@ import {
   Type,
 } from 'lucide-react';
 import { AnnotationTool } from '../../core/types';
+import { ThemeSwitcher } from './ThemeSwitcher';
 
 interface BottomToolbarProps {
   activeTool: AnnotationTool | 'note' | 'hand' | 'shape' | 'image' | 'link' | 'comment';
@@ -177,16 +178,8 @@ export const BottomToolbar: React.FC<BottomToolbarProps> = ({
         </div>
       </div>
 
-      {/* Bottom Right Floating Purple Chat Button with 3 dots (•••) */}
-      <button
-        className="bottom-right-chat-btn"
-        title="Collaborative Chat / Comments"
-        onClick={() => {}}
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
-          <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM7 11C6.45 11 6 10.55 6 10C6 9.45 6.45 9 7 9C7.55 9 8 9.45 8 10C8 10.55 7.55 11 7 11ZM12 11C11.45 11 11 10.55 11 10C11 9.45 11.45 9 12 9C12.55 9 13 9.45 13 10C13 10.55 12.55 11 12 11ZM17 11C16.45 11 16 10.55 16 10C16 9.45 16.45 9 17 9C17.55 9 18 9.45 18 10C18 10.55 17.55 11 17 11Z" />
-        </svg>
-      </button>
+      {/* Bottom Right Floating Screen / Theme Selector Button */}
+      <ThemeSwitcher />
     </>
   );
 };

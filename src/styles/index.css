@@ -1,4 +1,4 @@
-:root {
+:root, [data-theme="light"] {
   /* Light Modern Whiteboard Theme */
   --bg-base: #f8fafc;
   --bg-canvas: #ffffff;
@@ -47,6 +47,40 @@
 
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+}
+
+[data-theme="dark"] {
+  /* Dark Modern Whiteboard / Studio Theme */
+  --bg-base: #0f1015;
+  --bg-canvas: #090a0f;
+  --bg-surface: #181920;
+  --bg-surface-elevated: #22232d;
+  --bg-surface-glass: rgba(24, 25, 32, 0.92);
+  --bg-surface-active: #2e284a;
+  --bg-surface-hover: #262733;
+
+  --border-subtle: #272835;
+  --border-medium: #37384b;
+  --border-accent: #8b5cf6;
+  --border-focus: rgba(139, 92, 246, 0.6);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-on-accent: #ffffff;
+
+  --accent-primary: #8b5cf6;
+  --accent-secondary: #6366f1;
+  --accent-light: #2e284a;
+  --accent-hover: #7c3aed;
+  --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #a78bfa 100%);
+  --accent-glow: 0 4px 20px rgba(139, 92, 246, 0.35);
+
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 16px 36px -6px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-purple: 0 8px 28px -4px rgba(139, 92, 246, 0.3);
 }
 
 * {
