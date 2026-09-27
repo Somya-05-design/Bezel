@@ -16,7 +16,6 @@ const SHORTCUT_GROUPS: ShortcutCategory[] = [
     items: [
       { key: 'V', desc: 'Select / Move' },
       { key: 'H', desc: 'Hand / Pan Canvas' },
-      { key: 'N', desc: 'Sticky Note' },
       { key: 'S', desc: 'Shapes & Stars' },
       { key: 'A', desc: 'Arrow Line' },
       { key: 'T', desc: 'Text Annotation' },

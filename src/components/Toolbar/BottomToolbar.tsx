@@ -9,7 +9,6 @@ import {
   MousePointer,
   RotateCcw,
   Sparkles,
-  StickyNote,
   Type,
   Upload,
 } from 'lucide-react';
@@ -17,7 +16,7 @@ import { AnnotationTool } from '../../core/types';
 import { ThemeSwitcher } from './ThemeSwitcher';
 
 interface BottomToolbarProps {
-  activeTool: AnnotationTool | 'note' | 'hand' | 'shape' | 'image' | 'link' | 'comment';
+  activeTool: AnnotationTool | 'hand' | 'shape' | 'image' | 'link' | 'comment';
   onSelectTool: (tool: any) => void;
   onUploadFile?: (file: File) => void;
   onOpenShortcutsModal?: () => void;
@@ -88,11 +87,6 @@ export const BottomToolbar: React.FC<BottomToolbarProps> = ({
 
       {/* Main Bottom Floating Pill Toolbar with Purple Outline */}
       <div className="bottom-toolbar-container">
-        {/* Floating Tooltip directly above the Sticky Note Tool */}
-        <div className="toolbar-tooltip-pill">
-          Sticky Note
-        </div>
-
         <div className="bottom-toolbar">
           {/* 1. Selection Pointer Arrow ↖ */}
           <button
@@ -110,18 +104,6 @@ export const BottomToolbar: React.FC<BottomToolbarProps> = ({
             title="Hand / Pan (H)"
           >
             <Hand size={18} />
-          </button>
-
-          {/* 3. Sticky Note Tool (Active Lavender in Reference) */}
-          <button
-            className={`toolbar-btn ${activeTool === 'note' || activeTool === 'rectangle' ? 'active' : ''}`}
-            onClick={() => onSelectTool('note')}
-            title="Sticky Note (N)"
-          >
-            {/* Custom rounded note icon */}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill={activeTool === 'note' || activeTool === 'rectangle' ? '#7c3aed' : 'none'} stroke={activeTool === 'note' || activeTool === 'rectangle' ? '#7c3aed' : '#475569'} strokeWidth="2">
-              <rect x="4" y="4" width="16" height="16" rx="4" />
-            </svg>
           </button>
 
           {/* 4. 8-Point Star / Octagram Shape Tool ☼ */}

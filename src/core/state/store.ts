@@ -112,7 +112,7 @@ export const INITIAL_STATE: EditorState = {
     boomerang: false,
   },
 
-  activeTool: 'note' as any,
+  activeTool: 'select',
   annotationColor: '#7c3aed',
   annotationStrokeWidth: 4,
   annotationFontSize: 24,

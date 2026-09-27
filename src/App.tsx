@@ -183,8 +183,6 @@ export const App: React.FC = () => {
         setShowShortcutsModal((prev) => !prev);
       } else if (e.key.toLowerCase() === 'v') {
         handleSelectTool('select');
-      } else if (e.key.toLowerCase() === 'n') {
-        handleSelectTool('note');
       } else if (e.key.toLowerCase() === 'h') {
         handleSelectTool('hand');
       } else if (e.key.toLowerCase() === 's') {
