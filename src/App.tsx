@@ -172,6 +172,9 @@ export const App: React.FC = () => {
         e.preventDefault();
         if (e.shiftKey) handleRedo();
         else handleUndo();
+      } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'y') {
+        e.preventDefault();
+        handleRedo();
       } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'e') {
         e.preventDefault();
         setShowExportModal(true);

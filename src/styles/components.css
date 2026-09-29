@@ -291,7 +291,7 @@
 }
 
 /* ==========================================================================
-   BOTTOM LEFT QUICK CONTROLS
+   BOTTOM LEFT QUICK CONTROLS (Undo / Redo Steps)
    ========================================================================== */
 .bottom-left-controls {
   position: absolute;
@@ -299,13 +299,31 @@
   left: 28px;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 6px 8px;
+  gap: 2px;
+  padding: 4px 6px;
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   z-index: 40;
+}
+
+.bottom-left-controls .icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #475569;
+  transition: all 0.15s ease;
+}
+
+.bottom-left-controls .icon-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  color: #0f172a;
 }
 
 /* ==========================================================================
@@ -768,8 +786,13 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-[data-theme="dark"] .bottom-left-controls .icon-btn svg {
-  stroke: #94a3b8;
+[data-theme="dark"] .bottom-left-controls .icon-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .bottom-left-controls .icon-btn:hover:not(:disabled) {
+  background: #23242e;
+  color: #f8fafc;
 }
 
 [data-theme="dark"] .bottom-toolbar {

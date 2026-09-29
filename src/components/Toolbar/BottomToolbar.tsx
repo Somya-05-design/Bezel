@@ -1,15 +1,13 @@
 import React, { useRef } from 'react';
 import {
   ArrowUp,
-  Grid,
   Hand,
   HelpCircle,
   Link2,
   MessageSquare,
   MousePointer,
-  RotateCcw,
-  Sparkles,
-  Type,
+  Redo2,
+  Undo2,
   Upload,
 } from 'lucide-react';
 import { AnnotationTool } from '../../core/types';
@@ -38,50 +36,35 @@ export const BottomToolbar: React.FC<BottomToolbarProps> = ({
   onUploadFile,
   onOpenShortcutsModal,
   canUndo,
+  canRedo,
   onUndo,
+  onRedo,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   return (
     <>
-      {/* Bottom Left Quick Controls: [ ↺  ▨  ⊞ ] */}
+      {/* Bottom Left Quick Controls: Undo / Redo for steps */}
       <div className="bottom-left-controls">
         <button
           className="icon-btn"
           disabled={!canUndo}
           onClick={onUndo}
-          title="Undo (Ctrl+Z)"
-          style={{ width: 32, height: 32, opacity: canUndo ? 1 : 0.4 }}
+          title="Undo step (Ctrl+Z)"
+          aria-label="Undo"
+          style={{ width: 32, height: 32, opacity: canUndo ? 1 : 0.35, cursor: canUndo ? 'pointer' : 'not-allowed' }}
         >
-          <RotateCcw size={16} />
+          <Undo2 size={16} strokeWidth={2.2} />
         </button>
 
         <button
           className="icon-btn"
-          onClick={() => {}}
-          title="Layers & Shading"
-          style={{ width: 32, height: 32 }}
+          disabled={!canRedo}
+          onClick={onRedo}
+          title="Redo step (Ctrl+Y / Ctrl+Shift+Z)"
+          aria-label="Redo"
+          style={{ width: 32, height: 32, opacity: canRedo ? 1 : 0.35, cursor: canRedo ? 'pointer' : 'not-allowed' }}
         >
-          {/* Hatched Square Icon matching reference ▨ */}
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#475569" strokeWidth="1.5">
-            <rect x="2.5" y="2.5" width="11" height="11" rx="2" />
-            <line x1="3" y1="7" x2="7" y2="3" />
-            <line x1="3" y1="12" x2="12" y2="3" />
-            <line x1="7" y1="13" x2="13" y2="7" />
-          </svg>
-        </button>
-
-        <button
-          className="icon-btn"
-          onClick={() => {}}
-          title="Grid Layout View"
-          style={{ width: 32, height: 32 }}
-        >
-          {/* 2-column layout grid icon matching reference ⊞ */}
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#475569" strokeWidth="1.5">
-            <rect x="2.5" y="2.5" width="11" height="11" rx="2" />
-            <line x1="8" y1="2.5" x2="8" y2="13.5" />
-            <line x1="2.5" y1="8" x2="8" y2="8" />
-          </svg>
+          <Redo2 size={16} strokeWidth={2.2} />
         </button>
       </div>
 

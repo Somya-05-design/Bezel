@@ -27,7 +27,7 @@ const SHORTCUT_GROUPS: ShortcutCategory[] = [
     title: 'Actions & Engine',
     items: [
       { key: 'Ctrl + Z', desc: 'Undo Action' },
-      { key: 'Ctrl + Shift + Z', desc: 'Redo Action' },
+      { key: 'Ctrl + Shift + Z / Ctrl + Y', desc: 'Redo Action' },
       { key: 'Ctrl + E', desc: 'Open Export Studio' },
       { key: 'Shift + A', desc: 'Toggle Smart Fit' },
     ],
